@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!--
+    <script>
+    var append_increment = 0;
+    setInterval(function() {
+        $.ajax({
+            type: "GET",
+            url: '/',  // URL to your view that serves new info
+            // data: {'append_increment': append_increment}
+        })
+        .done(function(response) {
+            $('.list').append(response);
+            //append_increment += 10;
+        });
+    }, 1000)
+</script>
+-->
+
+<style type="text/css">
+    body{
+        background-color: #717fa2db;
+    }
+    .name{
+        color: white;
+        text-align: center;
+        font-size: 60px;
+        margin-top: auto;
+    }
+    
+    .container {
+        border: 2px solid #dedede;
+        background-color: #f1f1f1;
+        border-radius: 5px;
+        padding: 10px;
+        padding-left: 32px;
+        height: 50px;
+        width: auto;
+        margin-bottom: 20px;
+    }
+    .container:hover{
+        background-color: #00000080;
+        color: white;
+        transition: all 0.5s;
+    }
+    a:hover{
+        text-decoration: none;
+    }
+</style>
+{% if user != None and user != AnonymousUser %}
+<div class="name">Hello, {{ user.userName }}</div>
+{% endif %}
+
+{% for friend in friends %}
+<a href="/l/{{ value }}/t/{{ friend.userAccount }}">
+    <div class="container">
+        <div id='friend'>{{ friend.userName }}</div>
+    </div>
+</a>
+
+
+{% endfor %}
+
+{% endblock %}

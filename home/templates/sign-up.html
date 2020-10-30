@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block content %}
+<style type="text/css">
+	body{
+		background-color: #33308e;
+	}
+	.btn-outline-secondary{
+		color: #a4f748;
+	}
+	.title{
+		color: white;
+		font-size: 60px;
+		text-align: center;
+		margin-top: 50px;
+	}
+
+</style>
+<div class="title">Sign up</div>
+<form action="/build/" method="post">
+<div class="mx-auto" style="width: 300px;margin-top: 3rem!important;">
+		<div class="input-group mb-3">
+		  <div class="input-group-prepend">
+		    <span class="input-group-text" id="basic-addon1" style="background-color: orange;color: white;border: none;">New name</span>
+		  </div>
+		  <input name="name" type="text" class="form-control" placeholder="Username" aria-label="Username" style="border: none;background-color: black;color: white">
+		</div>
+		
+		<div class="input-group mb-3">
+			<div class="input-group-prepend">
+			  <span class="input-group-text" id="basic-addon1" style="background-color: orange;color: white;border: none;">New account</span>
+			</div>
+			<input name="account" type="text" class="form-control" placeholder="Account" style="border: none;background-color: black;color: white">
+		</div>
+
+		<div class="input-group mb-3">
+		  <div class="input-group-prepend">
+		    <span class="input-group-text" id="basic-addon1" style="background-color: orange;color: white;border: none;">New password</span>
+		  </div>
+		  <input name="password" type="password" class="form-control" placeholder="Password" style="border: none;background-color: black;color: white">
+		</div>
+
+	<div class="mx-auto" style="width: 90px;">
+		<button class="btn btn-outline-secondary">Sign up</button>
+	</div>
+</div>
+</form>
+
+{% endblock %}

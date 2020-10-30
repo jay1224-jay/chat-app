@@ -1,0 +1,224 @@
+{% extends 'logined_base.html' %}
+{% block name %}
+{{ user.userName }}
+{% endblock %}
+
+{% block key %}
+{{ key }}
+{% endblock %}
+{% block content %}
+<style>
+    
+</style>
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<head>
+<link href='https://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'>
+
+<style class="cp-pen-styles">* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Nunito', sans-serif;
+}
+
+html, body {
+  background: -webkit-linear-gradient(330deg, #000, #f0a6ca);
+  background: linear-gradient(120deg, #000, #009494);
+  overflow: hidden;
+}
+
+body{
+    background-color: #000000d4;
+}
+.input{
+    position: absolute;
+    bottom: 50px;
+    height: 60px;
+}
+
+.container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  flex-direction: column;
+  height: 106vh;
+  width: 100vw;
+  margin: auto;
+}
+
+.container h1 {
+  margin: 0.5em auto;
+  color: #FFF;
+  text-align: center;
+}
+
+.chatbox {
+  overflow: auto;
+  background: rgba(255, 255, 255, 0.05);
+  height: 56%;
+  border-radius: 0.2em;
+  box-shadow: 1px 1px 12px rgba(0, 0, 0, 0.1);  
+}
+
+.master{
+  float: right;
+}
+
+.customer{
+  float: left;
+}
+
+.chatbox__messages__user-message {
+  width: 450px;
+}
+
+.chatbox__messages__user-message--ind-message {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 1em 0;
+  height: auto;
+  width: 65%;
+  border-radius: 5px;
+  margin: 1em 1em;
+  overflow: auto;
+}
+
+.chatbox__messages__user-message--ind-message > p.name {
+  color: #FFF;
+  font-size: 15px;
+}
+
+.chatbox__messages__user-message--ind-message > p.message {
+  color: #FFF;
+  font-size: 15px;
+  margin: 0 2.8em;
+}
+
+
+.chatbox p {
+  float: left;
+  text-align: left;
+  margin: -0.25em 2em;
+  font-size: 0.7em;
+  font-weight: 300;
+  color: #FFF;
+}
+
+.container form input {
+  background: rgb(37 37 37);
+  position: relative;
+  width: 100%;
+  border: none;
+  padding: 1.2em;
+  outline: none;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 300;
+  font-size: 16px;
+}
+
+.chatbox::-webkit-scrollbar {
+  display: none;
+}
+
+::-webkit-input-placeholder {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+:-moz-placeholder {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+::-moz-placeholder {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+:-ms-input-placeholder {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+@media only screen and (max-width: 600px){
+  .container{
+    margin: 0;
+    width: initial;
+  }
+  .chatbox{
+    background-color: black;
+  }
+  .navbar{
+    display: none;
+  }
+}
+
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<div class='container'>
+  <h1>{{ friend.userName }}</h1>
+  <div class='chatbox'>
+    {% for msg in msgs %}
+      
+      {% if msg.since == friend.userAccount %}
+      <div class="customer chatbox__messages__user-message--ind-message">
+        <p class="name">{{ friend.userName }}</p>
+        <br/>
+        <p class="message">{{ msg.text }}</p>
+      </div>
+
+      {% else %}
+      <div class="master chatbox__messages__user-message--ind-message">
+        <p class="message">{{ msg.text }}</p>
+      </div>
+      {% endif %}
+
+    {% endfor %}
+
+    
+    
+  </div>
+  <form method="post" action="/l/{{ key }}/at/{{ friend.userAccount }}/">
+    <input name='mesg' type="text" placeholder="Type Message">
+  </form>
+</div>
+<!--
+  <form method="post" action="/l/{{ key }}/at/{{ friend.userAccount }}/">
+    <input name="mesg"type="text" class="input form-control" placeholder="Type something">
+    <button type="submit" class="send">Send</button>
+</form>
+
+-->
+<script>
+  var ob = document.getElementsByClassName('chatbox');
+  ob[0].scrollTop = ob[0].scrollHeight 
+  
+  $(document).ready(function(){
+      setInterval(function(){
+          $.ajax({
+              type: 'GET',
+              url: "{% url 'show' %}",
+              data: {"user_acc": "{{user.userAccount}}", "friend_acc": "{{ friend.userAccount }}",},
+              success: function(response){
+                  $('.chatbox').empty();
+                  for (var key in response.mesgs)
+                  {
+                      if ( response.mesgs[key].since == "{{ friend.userAccount }}" ){
+                        var tmp= '<div class="customer chatbox__messages__user-message--ind-message">\
+                                  <p class="name">{{ friend.userName }}</p>\
+                                  <br/>\
+                                  <p class="message">'+response.mesgs[key].text+'</p></div>';
+                      } else {
+                        var tmp= '<div class="master chatbox__messages__user-message--ind-message">\
+                                <p class="message">'+response.mesgs[key].text+'</p></div>';
+                      
+                      };
+                      $('.chatbox').append(tmp);
+                      
+                  }
+              },
+          });
+      }, 1500);
+  });
+</script>
+
+
+{% endblock %}

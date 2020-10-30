@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    body{
+        background-color: #ff3448!important;
+    }
+    .text{
+        font-size: 30px;
+        color: black;
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+        padding: 80px;
+        background-color: #ffffffa1;
+    }
+    code{
+        color: #32228a;
+        font-size: 35px;
+    }
+</style>
+{% if kind == 'no-type' %}
+    {% if attributes == 'no-name' %}
+        <div class="text">Please type a name.</div>
+    {% elif attributes == 'no-account' %}
+        <div class="text">Please type a account.</div>
+    {% else %}
+        <div class="text">Please type a password.</div>
+    {% endif %}
+{% elif kind == 'owned' %}
+    <div class="text">Sorry, "<code>{{ attributes }}</code>" is owned</div>
+{% endif %}
+
+
+{% endblock %}

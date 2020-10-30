@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<form action="/l/{{ user }}/s">
+    <input type="text" name='s_name'>
+    <button type="submit">search</button>
+</form>
+{% for person in list %}
+
+{{ person.userName}} <a href="/l/{{ user }}/a/{{ person.userAccount }}">add</a>
+
+{% endfor %}
+
+{% endblock %}
