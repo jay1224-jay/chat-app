@@ -8,18 +8,29 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
 </head>
 <body>
+
     <nav class="navbar navbar-dark bg-dark">
+        {% if login %}
+        <a class="navbar-brand" href="/l/{{ key }}">Bird Talk</a>
+        {% else %}
         <a class="navbar-brand" href="/">Bird Talk</a>
+        {% endif %}
         <form action="/login_page/">
             <button class="btn btn-info mt-3" type="submit">Login</button>
         </form>
+        {% if login ==  False or not login%}
         <form action="/sign-up/">
             <button class="btn btn-outline-success mt-3" type="submit">Create user</button>
         </form>
+        {% endif %}
+        {% if login == True %}
         <form action="add-friends-page/">
-            <button class="btn btn-info mt-3" type="submit">Add friends</button>
+            <button class="btn btn-info mt-3 af" type="submit">Add friends</button>
         </form>
+        {% endif %}
+
     </nav>
+
     {% block content %}
     {% endblock %}
 </body>

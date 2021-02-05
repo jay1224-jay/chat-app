@@ -13,38 +13,40 @@ def random_text():
     text = ""
     c = 0
     while c < 5:
-        t = chr(random.randint(33, 125))
-        if t != '/' or t != '\'' or t != '\"' or t != '\\':
-            text += chr(random.randint(33, 125))
+        t = chr(random.randint(65, 122))
+        if t != '/' and t != '\'' and t != '\"' and t != '\\' and t != '%':
+            text += t
             c += 1
     return text
 
-def index(request, value=None):
-    if value:
-        user = user_data.objects.get(userAccount=user_key.objects.get(value=value).account)
+def index(request, key=None):
+    if key:
+        user = user_data.objects.get(userAccount=user_key.objects.get(value=key).account)
         #user_data.objects.get(userAccount=user_key.objects.get(value=value).account).friends.split()
         friends = []
-        for i in user_data.objects.get(userAccount=user_key.objects.get(value=value).account).friends.split(): # <= list
-            friends.append(user_data.objects.get(userAccount=i))
-        print(friends)
 
-        return render(request, 'index.html', {'value': value, 'user': user, 'friends': friends})
-    message.objects.all().delete()
+        try:
+            eval(user.friends)
+        except:
+            user.friends = "[]"
+            user.save()
+        n = 0
+        for i in eval(user_data.objects.get(userAccount=user_key.objects.get(value=key).account).friends): # <= list
+            try:
+                friends.append(user_data.objects.get(userAccount=i))
+            except: # already delete
+                friend = eval(user.friends)
+                del friend[n]
+                user.friends = str(friend)
+                user.save()
+            n += 1
 
-    """master_msg = message.objects.all().filter(since='jay',to='123')
-    customer_msg = message.objects.all().filter(since='123', to='jay')
-
-    msgs = master_msg | customer_msg
-    q_set = msgs
-    print(list(q_set.values()))"""
-    return render(request, 'index.html')
+        return render(request, 'index.html', {'key': key, 'user': user, 'friends': friends, 'login': True})
+    return render(request, 'index.html', {'login': False})
 
 def create_user(request):
     return render(request, 'sign-up.html')
 
-def delete(request):
-    # user_data.objects.filter(id=10).delete()
-    return HttpResponseRedirect('/')
 
 def error(request, kind=None, attributes=None): # Attributes => 屬性
     """
@@ -86,6 +88,11 @@ def build(request):
             return HttpResponseRedirect('/error/no-type/no-account/')
     return HttpResponseRedirect('/error/no-type/no-name/')
 
+def delete(request, acc):
+    user_data.objects.filter(userAccount=acc).delete()
+    user_key.objects.filter(account=acc).delete()
+    return HttpResponseRedirect('/')
+
 def login_page(request):
     return render(request, 'login.html')
 
@@ -102,8 +109,10 @@ def add_friends_p(request, key):
     return render(request, 'add-friends.html', {'user': key})
 
 def search_friend(request, key):
-    name = request.GET['s_name']
-    list = user_data.objects.filter(userName=name)
+    s = request.GET['s_']
+    n_list = user_data.objects.filter(userName=s)
+    a_list = user_data.objects.filter(userAccount=s)
+    list = n_list | a_list 
     return render(request, 'add-friends.html', {'list': list, 'user': key})
     """
     add_name = request.GET['add_name']
@@ -118,8 +127,15 @@ def search_friend(request, key):
 def add_friends(request, key, add_acc):
     #print(user_data.objects.get(userAccount=add_acc).userName)
     to_update = user_data.objects.get(userAccount=user_key.objects.get(value=key).account)
-    to_update.friends += f"{add_acc} "   #f"{user_data  .objects.get(userAccount=add_acc).user} "
+    print(to_update.friends)
+    try:
+        eval(to_update.friends)
+    except:
+        to_update.friends = "[]" # set default
+    
+    to_update.friends = str(eval(to_update.friends) + eval(f"[\"{add_acc}\"]"))    # f{user_data  .objects.get(userAccount=add_acc).user} "
     to_update.save()
+    
     return HttpResponseRedirect('/l/'+key)
 
 def talk(request, key, acc):
@@ -161,3 +177,13 @@ def show(request):
     msgs = master_msg | customer_msg
     q_set = msgs
     return JsonResponse({'mesgs': list(q_set.values())})
+
+def delete_friend(request, key, acc):
+    to_update = user_data.objects.get(userAccount=user_key.objects.get(value=key).account)
+    
+    old = eval(to_update.friends)
+    del old[old.index(acc)]
+    
+    to_update.friends = str(old)
+    to_update.save()
+    return HttpResponseRedirect('/l/'+key)

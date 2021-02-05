@@ -17,8 +17,8 @@
 <body>
     <nav class="navbar navbar-dark bg-dark">
         
-        <a class="navbar-brand" href="/l/{% block key %}{% endblock %}">Bird Talk</a>
-        <div class="name">{% block name %}{% endblock %}</div>
+        <a class="navbar-brand" href="/l/{{ key }}">Bird Talk</a>
+        <div class="name">to {{ friend.userName }}</div>
         <form action="add-friends-page/">
             <button class="btn btn-info mt-3" type="submit">Add friends</button>
         </form>

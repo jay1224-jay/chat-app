@@ -1,17 +1,15 @@
 {% extends 'logined_base.html' %}
-{% block name %}
-{{ user.userName }}
-{% endblock %}
 
-{% block key %}
-{{ key }}
-{% endblock %}
+
 {% block content %}
 <style>
     
 </style>
-<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<!--
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+-->
+
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <head>
 <link href='https://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'>
@@ -32,23 +30,19 @@ html, body {
 body{
     background-color: #000000d4;
 }
-.input{
-    position: absolute;
-    bottom: 50px;
-    height: 60px;
-}
 
-.container {
+.contain {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   flex-direction: column;
-  height: 106vh;
-  width: 100vw;
-  margin: auto;
+  height: 100%;
+  width: 100%;
+  padding-left: 30px;
+  padding-right: 30px;
 }
 
-.container h1 {
+.contain h1 {
   margin: 0.5em auto;
   color: #FFF;
   text-align: center;
@@ -57,30 +51,23 @@ body{
 .chatbox {
   overflow: auto;
   background: rgba(255, 255, 255, 0.05);
-  height: 56%;
+  height: 72%;
   border-radius: 0.2em;
   box-shadow: 1px 1px 12px rgba(0, 0, 0, 0.1);  
 }
 
-.master{
-  float: right;
-}
-
-.customer{
-  float: left;
-}
 
 .chatbox__messages__user-message {
-  width: 450px;
+  width:450px;
 }
 
 .chatbox__messages__user-message--ind-message {
   background: rgba(255, 255, 255, 0.2);
   padding: 1em 0;
   height: auto;
-  width: 65%;
+  width:50%;
   border-radius: 5px;
-  margin: 1em 1em;
+  margin: 0.3em 2em;
   overflow: auto;
 }
 
@@ -91,10 +78,19 @@ body{
 
 .chatbox__messages__user-message--ind-message > p.message {
   color: #FFF;
-  font-size: 15px;
+  font-size: 0.9375rem;
   margin: 0 2.8em;
 }
 
+.master{
+  float: right;
+  background-color: #0000ff3b;
+  text-align: right;
+}
+
+.customer{
+  float: left;
+}
 
 .chatbox p {
   float: left;
@@ -105,7 +101,7 @@ body{
   color: #FFF;
 }
 
-.container form input {
+.contain form input {
   background: rgb(37 37 37);
   position: relative;
   width: 100%;
@@ -136,25 +132,25 @@ body{
 :-ms-input-placeholder {
   color: rgba(255, 255, 255, 0.9);
 }
-
-@media only screen and (max-width: 600px){
-  .container{
-    margin: 0;
-    width: initial;
+/*
+@media only screen and (max-width: 768px){
+  .contain{
+    padding: 0;
   }
+  
   .chatbox{
     background-color: black;
   }
   .navbar{
     display: none;
   }
-}
+}*/
 
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-<div class='container'>
-  <h1>{{ friend.userName }}</h1>
+<div class='contain'>
+  <!--<h1>{{ friend.userName }}</h1>-->
   <div class='chatbox'>
     {% for msg in msgs %}
       
@@ -177,7 +173,7 @@ body{
     
   </div>
   <form method="post" action="/l/{{ key }}/at/{{ friend.userAccount }}/">
-    <input name='mesg' type="text" placeholder="Type Message">
+    <input name='mesg' type="text" placeholder="Type Message" autofocus>
   </form>
 </div>
 <!--
@@ -216,7 +212,7 @@ body{
                   }
               },
           });
-      }, 1500);
+      }, 2000);
   });
 </script>
 

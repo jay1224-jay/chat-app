@@ -1,6 +1,11 @@
+
 {% extends 'base.html' %}
+
+{% block not_login %} {{ not_login }} {% endblock %}
+
 {% block content %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 <!--
     <script>
     var append_increment = 0;
@@ -36,8 +41,10 @@
         padding: 10px;
         padding-left: 32px;
         height: 50px;
-        width: auto;
+        width: 50%;
         margin-bottom: 20px;
+        margin-top: 20px; 
+        cursor: pointer;
     }
     .container:hover{
         background-color: #00000080;
@@ -47,19 +54,39 @@
     a:hover{
         text-decoration: none;
     }
+    #e{
+        color: black;
+    }
 </style>
-{% if user != None and user != AnonymousUser %}
-<div class="name">Hello, {{ user.userName }}</div>
+{% if user.userName %}
+    <div class="name">Hello, {{ user.userName }}</div>
 {% endif %}
 
 {% for friend in friends %}
-<a href="/l/{{ value }}/t/{{ friend.userAccount }}">
-    <div class="container">
+<li class="list-group-item list-group-item-dark container" onclick="toTalk('{{friend.userAccount}}')">
+    <!--
+       <form action="/l/{{ value }}/t/{{ friend.userAccount }}">
         <div id='friend'>{{ friend.userName }}</div>
+    </form> 
+    -->
+    <div style="width:0px;height:0px;">{{ friend.userName }}</div>
+    <div class="float-right">
+        <form action="/l/{{ key }}/del/{{ friend.userAccount }}">
+            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+        </form>
     </div>
-</a>
-
+    
+</li>
 
 {% endfor %}
+
+<script type="text/javascript">
+    setTimeout(function(){
+        $(".name").empty();
+    }, 3000);
+    function toTalk(acc){
+        window.location.replace("/l/{{key}}/t/"+acc);
+    }
+</script>
 
 {% endblock %}
